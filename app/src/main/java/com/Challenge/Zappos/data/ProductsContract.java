@@ -1,4 +1,4 @@
-package com.Challenge.Zappos.data.source;
+package com.Challenge.Zappos.data;
 
 import android.net.Uri;
 

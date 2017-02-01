@@ -1,4 +1,4 @@
-package com.Challenge.Zappos.data.source;
+package com.Challenge.Zappos.data;
 
 /**
  * Created by jiwanbhandari on 1/26/17.

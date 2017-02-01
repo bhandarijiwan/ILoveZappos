@@ -1,10 +1,8 @@
-package com.Challenge.Zappos.data.source.api;
+package com.Challenge.Zappos.data.api;
 
 import com.Challenge.Zappos.data.Product;
 
 import java.util.List;
-
-import static android.R.id.list;
 
 /**
  * Created by jiwanbhandari on 1/26/17.

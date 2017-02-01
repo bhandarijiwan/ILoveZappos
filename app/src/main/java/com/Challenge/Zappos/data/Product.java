@@ -15,53 +15,53 @@ public final class Product
 {
 
     @NonNull
-    private final String mproductName;
+    private final String productName;
 
     @NonNull
-    private final String mproductUrl;
+    private final String productUrl;
 
-    private final float moriginalPrice;
+    private final String originalPrice;
 
-    private int mproductID;
+    private int productID;
 
-    public Product(@NonNull String productName , @NonNull String productUrl, float oiginalPrice,
+    public Product(@NonNull String productName , @NonNull String productUrl, String oiginalPrice,
                    int productID){
-        mproductName = productName;
-        mproductUrl= productUrl;
-        moriginalPrice = oiginalPrice;
-        mproductID = productID;
+        this.productName = productName;
+        this.productUrl= productUrl;
+        this.originalPrice = oiginalPrice;
+        this.productID = productID;
     }
 
 
     @NonNull
     public String getMproductName() {
-        return mproductName;
+        return productName;
     }
 
     @NonNull
     public String getMproductUrl() {
-        return mproductUrl;
+        return productUrl;
     }
 
-    public float getMoriginalPrice() {
-        return moriginalPrice;
+    public String getMoriginalPrice() {
+        return originalPrice;
     }
 
     public int getMproductID() {
-        return mproductID;
+        return productID;
     }
 
     public void setMproductID(int mproductID) {
-        this.mproductID = mproductID;
+        this.productID = mproductID;
     }
 
     @Override
     public String toString() {
         return "Product {" +
-                "mproductName='" + mproductName + '\'' +
-                ", mproductUrl='" + mproductUrl + '\'' +
-                ", moriginalPrice=" + moriginalPrice +
-                ", mproductID=" + mproductID +
+                "mproductName='" + productName + '\'' +
+                ", mproductUrl='" + productUrl + '\'' +
+                ", moriginalPrice=" + originalPrice +
+                ", mproductID=" + productID +
                 '}';
     }
 
@@ -69,10 +69,10 @@ public final class Product
 
     @Override
     public int hashCode() {
-        int result = mproductName.hashCode();
-        result = 31 * result + mproductUrl.hashCode();
-        result = 31 * result + (moriginalPrice != +0.0f ? Float.floatToIntBits(moriginalPrice) : 0);
-        result = 31 * result + mproductID;
+        int result = productID;
+        result = 31 * result + productUrl.hashCode();
+        result = 31 * result + originalPrice.hashCode();
+        result = 31 * result + productID;
         return result;
     }
 
@@ -83,10 +83,10 @@ public final class Product
 
         Product product = (Product) o;
 
-        if (Float.compare(product.moriginalPrice, moriginalPrice) != 0) return false;
-        if (mproductID != product.mproductID) return false;
-        if (!mproductName.equals(product.mproductName)) return false;
-        return mproductUrl.equals(product.mproductUrl);
+        if (!originalPrice.equals(product.originalPrice)) return false;
+        if (productID != product.productID) return false;
+        if (!productName.equals(product.productName)) return false;
+        return productUrl.equals(product.productUrl);
 
     }
 }

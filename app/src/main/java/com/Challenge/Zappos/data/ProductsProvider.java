@@ -1,4 +1,4 @@
-package com.Challenge.Zappos.data.source;
+package com.Challenge.Zappos.data;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -6,8 +6,6 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.Nullable;
-
-import com.Challenge.Zappos.data.source.api.RESTConnectionHelper;
 
 import java.util.HashMap;
 
@@ -29,7 +27,7 @@ public class ProductsProvider extends ContentProvider {
     private static final int URI_IDENTIFIER = 1;
 
 
-    private RESTConnectionHelper mRESTConnectionHelper;
+//    private RESTConnectionHelper mRESTConnectionHelper;
 
     public ProductsProvider(){
 
@@ -42,7 +40,7 @@ public class ProductsProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        mRESTConnectionHelper= new RESTConnectionHelper();
+//        mRESTConnectionHelper= new RESTConnectionHelper();
         return true;
     }
 
