@@ -21,12 +21,17 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class ProductListLoader extends AsyncTaskLoader<List<Product>> {
+
     public static final String API_URL = "https://api.zappos.com";
+
+    public static final String TAG="ProductListLoader";
 
     List<Product> mProducts;
 
     Retrofit retrofit;
+
     ZapposService zappos;
+
     private HashMap<String,String> queryMap;
 
     public ProductListLoader(Context context) {
@@ -36,29 +41,28 @@ public class ProductListLoader extends AsyncTaskLoader<List<Product>> {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         zappos = retrofit.create(ZapposService.class);
-        queryMap = ProductsFilter.createNewFilter().filterList;
-
-
     }
 
-    public static ProductListLoader createListLoaderWithFilter(Context context, String...filters){
+    public static ProductListLoader createListLoaderWithFilter(Context context, ProductsFilter filters){
         ProductListLoader loader = new ProductListLoader(context);
-        loader.queryMap = ProductsFilter.createNewFilter(filters).filterList;
+        loader.queryMap = filters.filterList;
         return loader;
     }
 
 
     @Override
     public List<Product> loadInBackground() {
+
         List<Product> entries=new ArrayList<Product>();
-        queryMap.put("term","nike");
+
         Call<ProductSearchResponse> call = zappos.search(queryMap);
 
         Log.e("LoadInBackGround",call.request().url().toString());
 
         try {
             ProductSearchResponse searchResponse = call.execute().body();
-            entries = searchResponse.results;
+            if(searchResponse!=null)
+                entries = searchResponse.results;
             //for(Product product:searchResponse.results)entries.add(new AppEntry(product.toString()));
             Log.e("LoaderTest","Search Original Term="+searchResponse.originalTerm);
         } catch (IOException e) {
@@ -70,27 +74,35 @@ public class ProductListLoader extends AsyncTaskLoader<List<Product>> {
     }
 
     @Override
-    public void deliverResult(List<Product> apps){
+    public void deliverResult(List<Product> products){
 
-
-        List<Product> oldApps = mProducts;
-        mProducts = apps;
-
+        if(isReset())return;
+        mProducts = products;
+        Log.e(TAG,"Deliver Result called");
         if (isStarted()) {
             // If the Loader is currently started, we can immediately
             // deliver its results.
-            super.deliverResult(apps);
+            super.deliverResult(mProducts);
         }
     }
     @Override
     protected void onStartLoading(){
+
+        Log.e(TAG,"onStartLoading  called");
+
+        if(queryMap.size()<2) {
+
+            return;
+        }
         if (mProducts != null) {
             // If we currently have a result available, deliver it
             // immediately.
             deliverResult(mProducts);
         }
 
-        if (takeContentChanged() || mProducts == null) {
+
+
+        if (takeContentChanged() || mProducts == null ) {
             // If the data has changed since the last time it was loaded
             // or is not currently available, start a load.
             forceLoad();
@@ -103,13 +115,14 @@ public class ProductListLoader extends AsyncTaskLoader<List<Product>> {
     }
 
     @Override
-    public void onCanceled(List<Product> apps){
-        super.onCanceled(apps);
+    public void onCanceled(List<Product> products){
+        super.onCanceled(products);
     }
 
     @Override
     protected void onReset(){
         super.onReset();
+//        mProducts=null;
         onStopLoading();
     }
 }

@@ -17,6 +17,9 @@ import android.widget.TextView;
 
 import com.Challenge.Zappos.R;
 import com.Challenge.Zappos.data.Product;
+import com.Challenge.Zappos.util.NetworkImageLoaderHelper;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,7 +82,6 @@ public class ProductListFragment extends Fragment implements
         mSearchView.setOnCloseListener(this);
         mSearchView.setIconifiedByDefault(true);
         item.setActionView(mSearchView);
-
         Log.e("ProductListFragment","OnCreateOptionsMenu called!!!!");
     }
 
@@ -101,12 +103,13 @@ public class ProductListFragment extends Fragment implements
 
     @Override
     public boolean onQueryTextSubmit(String query) {
+        mPresenter.loadProducts(query);
         return false;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        return false;
+        return true;
     }
 
 
@@ -116,27 +119,32 @@ public class ProductListFragment extends Fragment implements
     }
 
 
-    private static class ProductListAdapter extends RecyclerView.Adapter<ViewHolder>{
+    private class ProductListAdapter extends RecyclerView.Adapter<ViewHolder>{
 
-        private final LayoutInflater mlayoutInflater;
+
         private List<Product> mProducts;
 
         public ProductListAdapter(Context context, ArrayList<Product> products) {
 
             this.mProducts = products;
-            mlayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
         }
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-            View view = mlayoutInflater.inflate(R.layout.product_list_item,parent,false);
+            LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+            View view = layoutInflater.inflate(R.layout.product_list_item,parent,false);
+
             final ViewHolder vh = new ViewHolder(view);
+
             return vh;
         }
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             holder.mTextView.setText(mProducts.get(position).toString());
+            holder.mThumbnail.setImageUrl(mProducts.get(position).getThumbnailImageUrl(),
+                    NetworkImageLoaderHelper.getInstance(ProductListFragment.this.getActivity()).getMbitMapLoader());
         }
 
         @Override
@@ -154,9 +162,10 @@ public class ProductListFragment extends Fragment implements
     private static class ViewHolder extends RecyclerView.ViewHolder{
 
         public TextView mTextView;
-
+        public NetworkImageView mThumbnail;
         public ViewHolder(View view) {
             super(view);
+            mThumbnail=(NetworkImageView)view.findViewById(R.id.thumbnail);
             mTextView = (TextView)view.findViewById(R.id.list_item_text);
         }
     }

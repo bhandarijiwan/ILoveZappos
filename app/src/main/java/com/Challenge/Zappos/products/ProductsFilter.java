@@ -1,5 +1,7 @@
 package com.Challenge.Zappos.products;
 
+import android.util.Log;
+
 import java.util.HashMap;
 
 /**
@@ -7,6 +9,8 @@ import java.util.HashMap;
  */
 
 public class ProductsFilter {
+
+    private static final String TAG= "ProductsFilter";
 
     public HashMap<String,String> filterList;
     private ProductsFilter() {
@@ -25,10 +29,12 @@ public class ProductsFilter {
         ProductsFilter productsFilter= new ProductsFilter();
         int i =1;
         String prev="";
-        for(String s : filters)
-            if(i++%2==0)
-                productsFilter.filterList.put(prev,s);
-
+        for(String s : filters) {
+            if (i++ % 2 == 0)
+                productsFilter.filterList.put(prev, s);
+            prev=s;
+        }
+        Log.e(TAG,"key="+prev + " value="+productsFilter.filterList.get(prev));
         return productsFilter;
     }
 

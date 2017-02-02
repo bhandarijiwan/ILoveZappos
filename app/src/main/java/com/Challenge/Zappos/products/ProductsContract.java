@@ -22,7 +22,7 @@ public interface ProductsContract {
     interface Presenter{
 
         void start();
-        void loadProducts();
+        void loadProducts(String query);
 
 
     }

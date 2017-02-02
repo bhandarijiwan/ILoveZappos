@@ -17,12 +17,15 @@
 package com.Challenge.Zappos.products;
 
 
+import android.databinding.DataBindingUtil;
+import android.databinding.tool.DataBindingBuilder;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import com.Challenge.Zappos.R;
+import com.Challenge.Zappos.databinding.ProductListActivityBinding;
 
 
 /**
@@ -36,10 +39,10 @@ public class ProductListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.product_list_activity);
+        ProductListActivityBinding binding = DataBindingUtil.setContentView(this,R.layout.product_list_activity);
 
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setSupportActionBar(binding.toolbar);
+
 
         ProductListFragment productListFragment= (ProductListFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
         if(productListFragment==null){
