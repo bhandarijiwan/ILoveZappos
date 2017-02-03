@@ -40,9 +40,7 @@ public class ProductListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ProductListActivityBinding binding = DataBindingUtil.setContentView(this,R.layout.product_list_activity);
-
         setSupportActionBar(binding.toolbar);
-
 
         ProductListFragment productListFragment= (ProductListFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
         if(productListFragment==null){

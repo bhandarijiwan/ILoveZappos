@@ -23,7 +23,7 @@ public interface ProductsContract {
 
         void start();
         void loadProducts(String query);
-
+        void loadProduct(Product product);
 
     }
 }

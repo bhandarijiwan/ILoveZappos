@@ -1,6 +1,8 @@
 package com.Challenge.Zappos.products;
 
 import android.content.Context;
+import android.databinding.BindingAdapter;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,8 +17,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.Challenge.Zappos.BR;
 import com.Challenge.Zappos.R;
 import com.Challenge.Zappos.data.Product;
+import com.Challenge.Zappos.databinding.ProductListFragmentBinding;
+import com.Challenge.Zappos.databinding.ProductListItemBinding;
 import com.Challenge.Zappos.util.NetworkImageLoaderHelper;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
@@ -33,9 +38,8 @@ public class ProductListFragment extends Fragment implements
         ProductsContract.View {
 
     private static final String TAG = "ProductListFragment";
-    private ProductsContract.Presenter mPresenter;
 
-    private ArrayList<Product> mProducts;
+    private ProductsContract.Presenter mPresenter;
 
     private RecyclerView mrecylerView;
 
@@ -55,18 +59,23 @@ public class ProductListFragment extends Fragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstaceState){
-        View root = inflater.inflate(R.layout.product_list_fragment,container,false);
+
         mAdapter = new ProductListAdapter(getActivity(),new ArrayList<Product>());
-        linearLayoutManager = new LinearLayoutManager(getActivity());
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mrecylerView = (RecyclerView) root.findViewById(R.id.recylerView);
-        mrecylerView.setAdapter(mAdapter);
-        mrecylerView.setLayoutManager(linearLayoutManager);
+
+        ProductListFragmentBinding binding = DataBindingUtil.inflate(inflater,R.layout.product_list_fragment,container,false);
+
+
+        binding.recylerView.setAdapter(mAdapter);
+
+        binding.recylerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
+
+//        binding.setVariable(BR.presenter,mPresenter);
 
         setHasOptionsMenu(true);
 
         Log.e(TAG,"onCreateView  Called !!");
-        return root;
+
+        return binding.getRoot();
     }
 
 
@@ -113,8 +122,10 @@ public class ProductListFragment extends Fragment implements
     }
 
 
+
     @Override
     public void showProducts(List<Product> products) {
+
         mAdapter.replaceData(products);
     }
 
@@ -133,18 +144,15 @@ public class ProductListFragment extends Fragment implements
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
             LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-            View view = layoutInflater.inflate(R.layout.product_list_item,parent,false);
 
-            final ViewHolder vh = new ViewHolder(view);
-
+            ProductListItemBinding productBinding = ProductListItemBinding.inflate(layoutInflater,parent,false);
+            final ViewHolder vh = new ViewHolder(productBinding);
             return vh;
         }
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.mTextView.setText(mProducts.get(position).toString());
-            holder.mThumbnail.setImageUrl(mProducts.get(position).getThumbnailImageUrl(),
-                    NetworkImageLoaderHelper.getInstance(ProductListFragment.this.getActivity()).getMbitMapLoader());
+            holder.bind(mProducts.get(position));
         }
 
         @Override
@@ -159,14 +167,26 @@ public class ProductListFragment extends Fragment implements
     }
 
 
-    private static class ViewHolder extends RecyclerView.ViewHolder{
+    private  class ViewHolder extends RecyclerView.ViewHolder{
 
-        public TextView mTextView;
-        public NetworkImageView mThumbnail;
-        public ViewHolder(View view) {
-            super(view);
-            mThumbnail=(NetworkImageView)view.findViewById(R.id.thumbnail);
-            mTextView = (TextView)view.findViewById(R.id.list_item_text);
+        private final ProductListItemBinding productBinding;
+
+        public ViewHolder(ProductListItemBinding productBinding) {
+            super(productBinding.getRoot());
+            this.productBinding=productBinding;
         }
+
+        public void bind(Product product){
+            this.productBinding.setProduct(product);
+            this.productBinding.setPresenter(mPresenter);
+            this.productBinding.executePendingBindings();
+        }
+    }
+
+    @BindingAdapter("imageUrl")
+    public static void loadImage(NetworkImageView networkImageView,String url){
+        ImageLoader imgLoader = NetworkImageLoaderHelper.getInstance(networkImageView.getContext()).getMbitMapLoader();
+        networkImageView.setDefaultImageResId(R.drawable.ic_perm_media_black);
+        networkImageView.setImageUrl(url,imgLoader);
     }
 }

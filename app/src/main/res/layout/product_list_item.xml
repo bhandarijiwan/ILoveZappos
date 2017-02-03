@@ -12,9 +12,23 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+<data>
+    <import type="com.Challenge.Zappos.data.Product"/>
+    <import type="com.Challenge.Zappos.products.ProductsContract.Presenter"/>
+    <variable
+        name="product"
+        type="Product"/>
+    <variable
+        name="presenter"
+        type="Presenter"/>
+</data>
+
+<android.support.v7.widget.CardView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="4dp"
@@ -32,35 +46,27 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="@android:color/darker_gray"
+        android:onClick="@{() -> presenter.loadProduct(product)}"
+        >
 
-        <TextView android:id="@+id/list_item_text"
-        android:layout_gravity="center_vertical"
-        android:layout_width="match_parent"
-        android:layout_weight="1.0"
-        android:layout_height="wrap_content" />
-
-        <com.android.volley.toolbox.NetworkImageView
-            android:id="@+id/thumbnail"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_centerHorizontal="true"
-            />
-
+            <TextView
+                android:layout_gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_weight="1.0"
+                android:layout_height="wrap_content"
+                android:text="@{product.toString()}"
+                />
+            <com.android.volley.toolbox.NetworkImageView
+                android:id="@+id/thumbnail"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_centerHorizontal="true"
+                app:imageUrl="@{product.getThumbnailImageUrl}"
+                />
     </LinearLayout>
 
 
 </android.support.v7.widget.CardView>
-
-<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--android:orientation="horizontal"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent">-->
-
-    <!--&lt;!&ndash;<ImageView android:id="@+id/icon"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:layout_width="48dip"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:layout_height="48dip" />&ndash;&gt;-->
-
-
-
-<!--</LinearLayout>-->
+</layout>

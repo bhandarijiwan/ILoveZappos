@@ -2,6 +2,7 @@ package com.Challenge.Zappos.products;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.Log;
@@ -56,6 +57,11 @@ public class ProductsPresenter implements LoaderManager.LoaderCallbacks<List<Pro
     public void loadProducts(String query) {
         productsFilter = ProductsFilter.createNewFilter("term",query);
         mLoaderManger.restartLoader(0,null,this);
+    }
+
+    @Override
+    public void loadProduct(Product product) {
+        Log.e(TAG,product.toString());
     }
 
 }
