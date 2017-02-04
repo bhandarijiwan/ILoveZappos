@@ -50,22 +50,21 @@ public final class Product implements Serializable
 
     }
 
-
     @NonNull
-    public String getMproductName() {
+    public String getProductName() {
         return productName;
     }
 
     @NonNull
-    public String getMproductUrl() {
+    public String getProductUrl() {
         return productUrl;
     }
 
-    public String getMoriginalPrice() {
+    public String getOriginalPrice() {
         return originalPrice;
     }
 
-    public int getMproductID() {
+    public int getProductID() {
         return productID;
     }
 

@@ -38,33 +38,61 @@
     android:clickable="true"
     android:focusable="true"
     android:foreground="?selectableItemBackground"
-    card_view:cardCornerRadius="5dp"
+    card_view:cardCornerRadius="0dp"
     card_view:contentPadding="4sp"
     card_view:cardElevation="5dp"
     card_view:cardMaxElevation="10dp"
     >
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:background="@android:color/darker_gray"
+        android:background="#FFFFFF"
         android:onClick="@{() -> presenter.loadProductDetail(product)}"
         >
+          <com.android.volley.toolbox.NetworkImageView
+            android:id="@+id/thumbnail"
+            android:layout_width="60dp"
+            android:layout_height="55dp"
+            android:layout_centerHorizontal="true"
+            app:imageUrl="@{product.getThumbnailImageUrl}"/>
 
-            <TextView
+        <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                >
+                <TextView
+                    style="@style/ListItemText"
+                    android:id="@+id/p_name"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1.0"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:text="@{product.productName}"
+                    />
+
+                <TextView
+                style="@style/ListItemText"
                 android:layout_gravity="center_vertical"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_weight="1.0"
                 android:layout_height="wrap_content"
-                android:text="@{product.toString()}"
-                />
-            <com.android.volley.toolbox.NetworkImageView
-                android:id="@+id/thumbnail"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_centerHorizontal="true"
-                app:imageUrl="@{product.getThumbnailImageUrl}"
-                />
+                android:layout_below="@+id/p_name"
+                android:layout_marginTop="2dp"
+                android:typeface="normal"
+                android:inputType="text" android:textSize="9.6sp"
+                    android:alpha="0.7"
+
+                android:text="@{product.brandName}"></TextView>
+
+
+            </RelativeLayout>
+
+
+
     </LinearLayout>
 
 

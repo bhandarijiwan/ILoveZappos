@@ -17,6 +17,8 @@
 package com.Challenge.Zappos.products;
 
 
+import android.app.SearchManager;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.databinding.tool.DataBindingBuilder;
 import android.os.Bundle;
@@ -50,5 +52,14 @@ public class ProductListActivity extends AppCompatActivity {
         /*Create a new presenter, don't need to hold reference to it because the View will have one. */
         new ProductsPresenter(getSupportLoaderManager(),productListFragment,this);
 
+    }
+    @Override
+    protected void onNewIntent(Intent intent){
+        if(Intent.ACTION_SEARCH.equals(intent.getAction())){
+        ProductListFragment productListFragment=
+                (ProductListFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            productListFragment.passQuery(query);
+        }
     }
 }

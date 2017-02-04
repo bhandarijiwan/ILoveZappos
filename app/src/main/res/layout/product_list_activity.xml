@@ -46,7 +46,7 @@
             android:elevation="6dp"
             app:backgroundTint="@color/colorPrimaryDark"
             app:fabSize="normal"
-            android:src="@android:drawable/ic_menu_search"
+            android:src="@drawable/ic_search_24dp"
             app:layout_anchor="@id/contentFrame"
             app:layout_anchorGravity="bottom|right|end" />
 

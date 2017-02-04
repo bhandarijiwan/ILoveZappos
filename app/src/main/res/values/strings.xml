@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ILoveZappos</string>
+    <string name="search_hint"> Zappos Search </string>
 </resources>

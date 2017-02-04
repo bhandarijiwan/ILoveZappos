@@ -1,5 +1,7 @@
 package com.Challenge.Zappos.products;
 
+import android.animation.LayoutTransition;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.BindingAdapter;
@@ -16,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.Challenge.Zappos.R;
 import com.Challenge.Zappos.data.Product;
@@ -60,9 +63,6 @@ public class ProductListFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstaceState){
 
-
-
-
         mAdapter = new ProductListAdapter(getActivity(),new ArrayList<Product>());
 
         ProductListFragmentBinding binding = DataBindingUtil.inflate(inflater,R.layout.product_list_fragment,container,false);
@@ -82,17 +82,41 @@ public class ProductListFragment extends Fragment implements
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+
+
+
         // Place an action bar item for searching.
         MenuItem item = menu.add("Search");
-        item.setIcon(android.R.drawable.ic_menu_search);
+        item.setIcon(R.drawable.ic_search_24dp);
         item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM
                 | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
         mSearchView = new SearchView(getActivity());
         mSearchView.setOnQueryTextListener(this);
         mSearchView.setOnCloseListener(this);
         mSearchView.setIconifiedByDefault(true);
+        SearchManager searchManager = (SearchManager)getActivity().getSystemService(Context.SEARCH_SERVICE);
+        mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
         item.setActionView(mSearchView);
+
+        LinearLayout searchBar = (LinearLayout) mSearchView.findViewById(R.id.search_bar);
+        searchBar.setLayoutTransition(new LayoutTransition());
+//        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem item) {
+//                Log.e(TAG,"Search Button Clicked !!!");
+//                return false;
+//            }
+//        });
         Log.e("ProductListFragment","OnCreateOptionsMenu called!!!!");
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+
+        if(item.getTitle().equals("Search")){
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -120,16 +144,18 @@ public class ProductListFragment extends Fragment implements
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        mPresenter.loadProducts(query);
         return false;
+    }
+
+    public void passQuery(String query){
+        mSearchView.setQuery(query,false);
+        mPresenter.loadProducts(query);
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
         return true;
     }
-
-
 
     @Override
     public void showProducts(List<Product> products) {
