@@ -10,7 +10,6 @@ public interface ProductDetailContract {
 
     }
     interface Presenter{
-
-
+        void start();
     }
 }

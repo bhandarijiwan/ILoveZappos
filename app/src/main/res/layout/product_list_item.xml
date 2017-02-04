@@ -48,7 +48,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="@android:color/darker_gray"
-        android:onClick="@{() -> presenter.loadProduct(product)}"
+        android:onClick="@{() -> presenter.loadProductDetail(product)}"
         >
 
             <TextView
@@ -60,8 +60,8 @@
                 />
             <com.android.volley.toolbox.NetworkImageView
                 android:id="@+id/thumbnail"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_centerHorizontal="true"
                 app:imageUrl="@{product.getThumbnailImageUrl}"
                 />

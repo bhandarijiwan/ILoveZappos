@@ -60,8 +60,8 @@ public class ProductsPresenter implements LoaderManager.LoaderCallbacks<List<Pro
     }
 
     @Override
-    public void loadProduct(Product product) {
-        Log.e(TAG,product.toString());
+    public void loadProductDetail(Product product) {
+        mProductsView.showProductDetailUi(product);
     }
 
 }

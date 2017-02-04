@@ -1,4 +1,4 @@
-package com.Challenge.Zappos.util;
+package com.Challenge.Zappos.utils;
 
 import android.app.ActivityManager;
 import android.content.Context;

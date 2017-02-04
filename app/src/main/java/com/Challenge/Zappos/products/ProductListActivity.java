@@ -35,7 +35,6 @@ public class ProductListActivity extends AppCompatActivity {
 
     private final static String TAG = "ProductListActivity";
 
-    private ProductsPresenter mProductsPresenter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +47,8 @@ public class ProductListActivity extends AppCompatActivity {
             productListFragment = new ProductListFragment();
             getSupportFragmentManager().beginTransaction().add(R.id.contentFrame,productListFragment).commit();
         }
-        mProductsPresenter = new ProductsPresenter(getSupportLoaderManager(),productListFragment,this);
+        /*Create a new presenter, don't need to hold reference to it because the View will have one. */
+        new ProductsPresenter(getSupportLoaderManager(),productListFragment,this);
 
     }
 }

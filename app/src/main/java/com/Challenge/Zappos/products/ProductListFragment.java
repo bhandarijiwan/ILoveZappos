@@ -1,6 +1,7 @@
 package com.Challenge.Zappos.products;
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.BindingAdapter;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -15,19 +16,20 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.Challenge.Zappos.BR;
 import com.Challenge.Zappos.R;
 import com.Challenge.Zappos.data.Product;
 import com.Challenge.Zappos.databinding.ProductListFragmentBinding;
 import com.Challenge.Zappos.databinding.ProductListItemBinding;
-import com.Challenge.Zappos.util.NetworkImageLoaderHelper;
+import com.Challenge.Zappos.productdetail.ProductDetailActivity;
+import com.Challenge.Zappos.utils.NetworkImageLoaderHelper;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.security.AccessController.getContext;
 
 /**
  * Created by jiwanbhandari on 1/31/17.
@@ -41,13 +43,11 @@ public class ProductListFragment extends Fragment implements
 
     private ProductsContract.Presenter mPresenter;
 
-    private RecyclerView mrecylerView;
 
     private SearchView mSearchView;
 
     private ProductListAdapter mAdapter;
 
-    private LinearLayoutManager linearLayoutManager;
 
     public ProductListFragment(){}
 
@@ -60,6 +60,9 @@ public class ProductListFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstaceState){
 
+
+
+
         mAdapter = new ProductListAdapter(getActivity(),new ArrayList<Product>());
 
         ProductListFragmentBinding binding = DataBindingUtil.inflate(inflater,R.layout.product_list_fragment,container,false);
@@ -68,8 +71,6 @@ public class ProductListFragment extends Fragment implements
         binding.recylerView.setAdapter(mAdapter);
 
         binding.recylerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
-
-//        binding.setVariable(BR.presenter,mPresenter);
 
         setHasOptionsMenu(true);
 
@@ -97,6 +98,13 @@ public class ProductListFragment extends Fragment implements
     @Override
     public void setPresenter(ProductsContract.Presenter presenter){
         mPresenter = presenter;
+    }
+
+    @Override
+    public void showProductDetailUi(Product product) {
+        Intent intent = new Intent(this.getActivity(), ProductDetailActivity.class);
+        intent.putExtra("product",product);
+        startActivity(intent);
     }
 
     @Override

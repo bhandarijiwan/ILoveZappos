@@ -7,5 +7,8 @@ package com.Challenge.Zappos.productdetail;
 public class ProductDetailPresenter implements ProductDetailContract.Presenter{
 
 
+    @Override
+    public void start() {
 
+    }
 }

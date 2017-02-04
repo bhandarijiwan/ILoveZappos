@@ -17,13 +17,14 @@ public interface ProductsContract {
     interface View{
         void showProducts(List<Product> products);
         void setPresenter(Presenter presenter);
+        void showProductDetailUi(Product product);
     }
 
     interface Presenter{
 
         void start();
         void loadProducts(String query);
-        void loadProduct(Product product);
+        void loadProductDetail(Product product);
 
     }
 }

@@ -5,13 +5,14 @@ package com.Challenge.Zappos.data;
  */
 
 import android.support.annotation.NonNull;
+import java.io.Serializable;
 
 /**
  * Immutable model class for a Product (Search Result Item)
  */
 
 
-public final class Product
+public final class Product implements Serializable
 {
 
     @NonNull
