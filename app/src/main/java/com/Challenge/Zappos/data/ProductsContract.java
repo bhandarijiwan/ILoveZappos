@@ -9,7 +9,7 @@ import com.Challenge.Zappos.BuildConfig;
  */
 public final class ProductsContract {
 
-    private ProductsContract(){};
+    private ProductsContract(){}
 
     /* The authority for out content provider.*/
     public static final String CONTENT_AUTHORITY= BuildConfig.APPLICATION_ID;

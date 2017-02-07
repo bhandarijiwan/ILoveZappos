@@ -50,5 +50,11 @@ public class NetworkImageLoaderHelper {
         return mbitMapLoader;
     }
 
+    public Bitmap getImage(String url){
+
+        return instance.mbitMapCache.get(url);
+
+    }
+
 
 }

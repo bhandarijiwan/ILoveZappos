@@ -6,6 +6,7 @@ package com.Challenge.Zappos.data;
 
 import android.support.annotation.NonNull;
 import java.io.Serializable;
+import java.text.DecimalFormat;
 
 /**
  * Immutable model class for a Product (Search Result Item)
@@ -23,7 +24,7 @@ public final class Product implements Serializable
 
     private final String originalPrice;
 
-    private final int productID;
+    private final int productId;
 
     private final String brandName;
 
@@ -41,7 +42,7 @@ public final class Product implements Serializable
         this.productName = productName;
         this.productUrl= productUrl;
         this.originalPrice = oiginalPrice;
-        this.productID = productID;
+        this.productId = productID;
         this.brandName = brandName;
         this.thumbnailImageUrl = thumbnailImageUrl;
         this.colorId = colorId;
@@ -64,12 +65,16 @@ public final class Product implements Serializable
         return originalPrice;
     }
 
-    public int getProductID() {
-        return productID;
+    public int getProductId() {
+        return productId;
     }
 
-    public String getPercentOff() {
-        return percentOff;
+    public String getPercentOff(){
+        return  percentOff.replaceAll("%","");
+    }
+
+    public boolean hasDiscount(){
+        return Float.parseFloat(percentOff.replaceAll("%",""))>0;
     }
 
     public int getStyleId() {
@@ -88,6 +93,13 @@ public final class Product implements Serializable
         return brandName;
     }
 
+    public String getDiscountedPrice(){
+        float originalPrice = Float.parseFloat(this.originalPrice.replaceAll("\\$|,|%",""));
+        float discount = Float.parseFloat(percentOff.replaceAll("%|,|\\$",""));
+        DecimalFormat df = new DecimalFormat("#.##");
+        return "$"+df.format(originalPrice - originalPrice * (discount/100.0f));
+
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -95,7 +107,7 @@ public final class Product implements Serializable
 
         Product product = (Product) o;
 
-        if (productID != product.productID) return false;
+        if (productId != product.productId) return false;
         if (colorId != product.colorId) return false;
         if (styleId != product.styleId) return false;
         if (!productName.equals(product.productName)) return false;
@@ -115,7 +127,7 @@ public final class Product implements Serializable
         int result = productName.hashCode();
         result = 31 * result + productUrl.hashCode();
         result = 31 * result + (originalPrice != null ? originalPrice.hashCode() : 0);
-        result = 31 * result + productID;
+        result = 31 * result + productId;
         result = 31 * result + (brandName != null ? brandName.hashCode() : 0);
         result = 31 * result + (thumbnailImageUrl != null ? thumbnailImageUrl.hashCode() : 0);
         result = 31 * result + colorId;
@@ -130,7 +142,7 @@ public final class Product implements Serializable
                 "productName='" + productName + '\'' +
                 ", productUrl='" + productUrl + '\'' +
                 ", originalPrice='" + originalPrice + '\'' +
-                ", productID=" + productID +
+                ", productID=" + productId +
                 ", brandName='" + brandName + '\'' +
                 ", thumbnailImageUrl='" + thumbnailImageUrl + '\'' +
                 ", colorId=" + colorId +

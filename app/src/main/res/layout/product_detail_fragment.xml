@@ -1,8 +1,170 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
-    <LinearLayout
-        android:orientation="vertical" android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </LinearLayout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="product"
+            type="com.Challenge.Zappos.data.Product"/>
+
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/switch_thumb_normal_material_dark"
+        >
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginLeft="14dp"
+                android:layout_marginTop="4dp"
+                >
+                <TextView
+                    android:id="@+id/productname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:text="@{product.productName}"
+                    style="@style/ListItemText"
+                    android:typeface="normal"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:textColor="#1596E4"
+                    />
+                <TextView
+                    style="@style/ListItemText"
+                    android:id="@+id/brandname"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1.0"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/p_name"
+                    android:layout_marginTop="2dp"
+                    android:typeface="normal"
+                    android:inputType="text"
+                    android:textSize="9sp"
+                    android:text="@{product.brandName}"
+                    android:textColor="@color/dim_foreground_material_light"
+                    />
+            </LinearLayout>
+
+            <com.daimajia.slider.library.SliderLayout
+                android:id="@+id/slider"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="5dp"
+                />
+
+            <com.daimajia.slider.library.Indicators.PagerIndicator
+                android:id="@+id/custom_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:transitionName="thumbnail_picture"
+                android:gravity="center"
+                />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
+                >
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dip"
+                    android:background="#c0c0c0" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="9dp"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="135dp"
+                        android:text="Colors "
+                        android:textColor="@android:color/tertiary_text_light"
+                        />
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/productcolor_r"
+                        android:background="@android:color/transparent"
+                        android:paddingLeft="3dp"
+                        android:paddingTop="3dp"
+
+                        />
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/productcolor_g"
+                        android:background="@android:color/transparent"
+                        android:paddingLeft="3dp"
+                        android:paddingTop="3dp"
+                        />
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/productcolor_b"
+                        android:background="@android:color/transparent"
+                        android:paddingLeft="3dp"
+                        android:paddingTop="3dp"
+                        />
+
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dip"
+                    android:background="#c0c0c0"
+                    android:layout_marginTop="7dp"
+                    />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="3dp"
+                    android:textColor="@android:color/secondary_text_light"
+                    android:text='@{"List Price:  "+product.originalPrice}'
+                    />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="3dp"
+                    android:textColor="@android:color/secondary_text_light"
+                    android:text='@{"        Price: " + product.discountedPrice}'
+                    />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="3dp"
+                    android:textColor="@android:color/secondary_text_light"
+                    android:text='@{" Discount : "+product.percentOff}'
+                    />
+
+            </LinearLayout>
+
+
+
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
 
 </layout>

@@ -17,6 +17,9 @@
 package com.Challenge.Zappos.products;
 
 
+import android.animation.Animator;
+import android.animation.LayoutTransition;
+import android.animation.ObjectAnimator;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -25,6 +28,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.animation.AnimationUtils;
 
 import com.Challenge.Zappos.R;
 import com.Challenge.Zappos.databinding.ProductListActivityBinding;
@@ -43,12 +47,17 @@ public class ProductListActivity extends AppCompatActivity {
         ProductListActivityBinding binding = DataBindingUtil.setContentView(this,R.layout.product_list_activity);
         setSupportActionBar(binding.toolbar);
 
+        LayoutTransition layoutTransition = new LayoutTransition();
+        layoutTransition.disableTransitionType(LayoutTransition.DISAPPEARING);
+        binding.toolbar.setLayoutTransition(layoutTransition);
+
         ProductListFragment productListFragment= (ProductListFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
         if(productListFragment==null){
             Log.e(TAG,"Fragment Recreated!!!!");
             productListFragment = new ProductListFragment();
             getSupportFragmentManager().beginTransaction().add(R.id.contentFrame,productListFragment).commit();
         }
+        binding.fab.setOnClickListener(productListFragment);
         /*Create a new presenter, don't need to hold reference to it because the View will have one. */
         new ProductsPresenter(getSupportLoaderManager(),productListFragment,this);
 

@@ -1,10 +1,15 @@
 package com.Challenge.Zappos.productdetail;
 
+import android.animation.LayoutTransition;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 
 import com.Challenge.Zappos.R;
+import com.Challenge.Zappos.data.Product;
 import com.Challenge.Zappos.databinding.ProductDetailActivityBinding;
+import com.Challenge.Zappos.databinding.ProductListActivityBinding;
 
 /**
  * Created by jiwanbhandari on 2/2/17.
@@ -16,24 +21,29 @@ public class ProductDetailActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceItems){
         super.onCreate(savedInstanceItems);
         ProductDetailActivityBinding binding =
-                ProductDetailActivityBinding.inflate(getLayoutInflater());
-        binding.toolbar.setTitle("Product Detail");
+                DataBindingUtil.setContentView(this,R.layout.product_detail_activity);
         setSupportActionBar(binding.toolbar);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+
+        Product product = (Product) getIntent().getSerializableExtra("product");
         /*Initialize the View (Fragment) */
         ProductDetailFragment productDetailFragment = (ProductDetailFragment)
-                getSupportFragmentManager().findFragmentById(R.id.contentFrame);
-        if(productDetailFragment!=null){
+                getSupportFragmentManager().findFragmentById(R.id.detailcontentFrame);
+
+        if(productDetailFragment==null){
             productDetailFragment = new ProductDetailFragment();
             getSupportFragmentManager().beginTransaction().
-                    add(R.id.contentFrame,productDetailFragment).commit();
+                    add(R.id.detailcontentFrame,productDetailFragment).commit();
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("product",product);
+            productDetailFragment.setArguments(bundle);
         }
-
         /*create the product detail presenter, don't need to maintain a reference to it because the
         * View will keep a reference.*/
-         new ProductDetailPresenter();
+        new ProductDetailPresenter((Product) getIntent().getSerializableExtra("product"),productDetailFragment);
 
     }
 
@@ -43,4 +53,5 @@ public class ProductDetailActivity extends AppCompatActivity {
         return true;
 
     }
+
 }
