@@ -5,7 +5,7 @@ import com.Challenge.Zappos.data.Product;
 /**
  * Created by jiwanbhandari on 2/2/17.
  */
-
+// contract that defines an interface for the View and Presenter to talk to each other.
 public interface ProductDetailContract {
 
     interface View{
@@ -14,5 +14,6 @@ public interface ProductDetailContract {
     }
     interface Presenter{
         void start();
+
     }
 }

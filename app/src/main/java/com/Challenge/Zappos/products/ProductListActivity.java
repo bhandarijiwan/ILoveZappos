@@ -33,9 +33,12 @@ import android.view.animation.AnimationUtils;
 import com.Challenge.Zappos.R;
 import com.Challenge.Zappos.databinding.ProductListActivityBinding;
 
+import java.util.HashSet;
 
-/**
- * Demonstration of the implementation of a custom Loader.
+
+/** Activity for displaying the search result.
+ *  Most work happens in the View (fragment) and the activity itself
+ *  just initializes and glues the View and Presenter.
  */
 public class ProductListActivity extends AppCompatActivity {
 
@@ -51,13 +54,19 @@ public class ProductListActivity extends AppCompatActivity {
         layoutTransition.disableTransitionType(LayoutTransition.DISAPPEARING);
         binding.toolbar.setLayoutTransition(layoutTransition);
 
+
         ProductListFragment productListFragment= (ProductListFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
+
+        /*Reattach the fragment if it hasn't already been attached.*/
         if(productListFragment==null){
-            Log.e(TAG,"Fragment Recreated!!!!");
             productListFragment = new ProductListFragment();
             getSupportFragmentManager().beginTransaction().add(R.id.contentFrame,productListFragment).commit();
         }
-        binding.fab.setOnClickListener(productListFragment);
+
+
+        // set the onclick listner to fab here because fab is part of activity not the fragment.
+        binding.fab.setOnClickListener(productListFragment); //TODO consider moving the fab to fragment
+
         /*Create a new presenter, don't need to hold reference to it because the View will have one. */
         new ProductsPresenter(getSupportLoaderManager(),productListFragment,this);
 

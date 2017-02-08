@@ -40,7 +40,6 @@ public class ProductsProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-//        mRESTConnectionHelper= new RESTConnectionHelper();
         return true;
     }
 

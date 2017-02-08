@@ -13,6 +13,10 @@ public class ProductsFilter {
     private static final String TAG= "ProductsFilter";
 
     public HashMap<String,String> filterList;
+
+    /**
+     * If add "key", and "..." pair by default to the filter.
+     */
     private ProductsFilter() {
         filterList = new HashMap<String,String>();
         filterName ="key";
@@ -24,6 +28,12 @@ public class ProductsFilter {
 
     private final String filterValue;
 
+    /**
+     * Called to make a filter, with aribitary key value pairs.
+     * @param filters key value pairs
+     * @return Filter that will be ultimately supplied to retrofit.
+     */
+
     public static ProductsFilter createNewFilter(String...filters){
 
         ProductsFilter productsFilter= new ProductsFilter();
@@ -34,7 +44,6 @@ public class ProductsFilter {
                 productsFilter.filterList.put(prev, s);
             prev=s;
         }
-        Log.e(TAG,"key="+prev + " value="+productsFilter.filterList.get(prev));
         return productsFilter;
     }
 

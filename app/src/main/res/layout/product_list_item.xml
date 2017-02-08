@@ -39,9 +39,9 @@
         android:clickable="true"
         android:focusable="true"
         app:backgroundTint="?selectableItemBackground"
-        card_view:cardCornerRadius="5dp"
+        card_view:cardCornerRadius="2dp"
         card_view:contentPadding="4sp"
-        card_view:cardElevation="5dp"
+        card_view:cardElevation="2dp"
         card_view:cardMaxElevation="10dp"
         >
 
@@ -150,7 +150,7 @@
                <ImageButton
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:src="@drawable/cart"
+                    android:src='@{presenter.isInCart(product.hashCode())?@drawable/cart_off:@drawable/cart}'
                     android:layout_gravity="right"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentRight="true"

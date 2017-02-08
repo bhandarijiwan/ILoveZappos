@@ -7,11 +7,12 @@ import java.util.List;
 /**
  * Created by jiwanbhandari on 1/26/17.
  */
-/*Models the response from zappos api*/
 
-public class ProductSearchResponse {
+/*Models the response from zappos api.
+* This class represents the entire search response.
+* */
 
-
+public final class ProductSearchResponse  {
     public final List<Product>results;
     public final String originalTerm;
     public final int currentResultCount;

@@ -19,6 +19,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * Created by jiwanbhandari on 1/31/17.
  */
+/**
+ * This is a custom loader and it calls retrofit in the background thread
+ * and delivers the result to the LoaderManger (ProductsPresenter) in the UI thread.
+ */
 
 public class ProductListLoader extends AsyncTaskLoader<List<Product>> {
 
@@ -57,14 +61,12 @@ public class ProductListLoader extends AsyncTaskLoader<List<Product>> {
 
         Call<ProductSearchResponse> call = zappos.search(queryMap);
 
-        Log.e("LoadInBackGround",call.request().url().toString());
-
         try {
+            // because we are already in the background thread,
+            // retrofit can execute synchronously.
             ProductSearchResponse searchResponse = call.execute().body();
             if(searchResponse!=null)
                 entries = searchResponse.results;
-            //for(Product product:searchResponse.results)entries.add(new AppEntry(product.toString()));
-            Log.e("LoaderTest","Search Original Term="+searchResponse.originalTerm);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -78,7 +80,6 @@ public class ProductListLoader extends AsyncTaskLoader<List<Product>> {
 
         if(isReset())return;
         mProducts = products;
-        Log.e(TAG,"Deliver Result called");
         if (isStarted()) {
             // If the Loader is currently started, we can immediately
             // deliver its results.
@@ -87,9 +88,6 @@ public class ProductListLoader extends AsyncTaskLoader<List<Product>> {
     }
     @Override
     protected void onStartLoading(){
-
-        Log.e(TAG,"onStartLoading  called");
-
         if(queryMap.size()<2) {
 
             return;
@@ -99,10 +97,7 @@ public class ProductListLoader extends AsyncTaskLoader<List<Product>> {
             // immediately.
             deliverResult(mProducts);
         }
-
-
-
-        if (takeContentChanged() || mProducts == null ) {
+       if (takeContentChanged() || mProducts == null ) {
             // If the data has changed since the last time it was loaded
             // or is not currently available, start a load.
             forceLoad();
@@ -122,7 +117,6 @@ public class ProductListLoader extends AsyncTaskLoader<List<Product>> {
     @Override
     protected void onReset(){
         super.onReset();
-//        mProducts=null;
         onStopLoading();
     }
 }

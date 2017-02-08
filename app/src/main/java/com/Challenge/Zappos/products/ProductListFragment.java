@@ -22,6 +22,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 
@@ -35,21 +36,22 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-
-
-
 /**
  * Created by jiwanbhandari on 1/31/17.
+ * This is where the bulk of UI work actually happens.
+ *
+ * ProductListFragment implements ProductsContract.View which defines
+ * an interface for the presenter to talk with it.
  */
 
 public class ProductListFragment extends Fragment implements
-       ProductsContract.View,View.OnClickListener, SearchView.OnCloseListener{
+        ProductsContract.View,View.OnClickListener, SearchView.OnCloseListener{
 
     private static final String TAG = "ProductListFragment";
 
     private ProductsContract.Presenter mPresenter;
-
 
     private SearchView mSearchView;
 
@@ -57,31 +59,26 @@ public class ProductListFragment extends Fragment implements
 
     private ProductListAdapter mAdapter;
 
-    private AnimatedVectorDrawable searchToback;
 
     public ProductListFragment(){}
 
     @Override
     public void onActivityCreated(Bundle savedInstaceItems){
         super.onActivityCreated(savedInstaceItems);
-        Log.e(TAG,"onActivityCreated Called !!");
+        if(savedInstaceItems!=null && savedInstaceItems.containsKey("cart"))
+        mPresenter.setCart((HashSet<Integer>) savedInstaceItems.getSerializable("cart"));
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstaceState){
 
         mAdapter = new ProductListAdapter(getActivity(),new ArrayList<Product>());
-
+        // We inflate out Fragment Layout here but data binding come to rescue so
+        // don't have to do much at all.
         ProductListFragmentBinding binding = DataBindingUtil.inflate(inflater,R.layout.product_list_fragment,container,false);
-
         binding.recylerView.setAdapter(mAdapter);
-
         binding.recylerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
-
         setHasOptionsMenu(true);
-
-        Log.e(TAG,"onCreateView  Called !!");
-
         return binding.getRoot();
     }
 
@@ -89,9 +86,6 @@ public class ProductListFragment extends Fragment implements
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
-
-        searchToback = (AnimatedVectorDrawable) ContextCompat
-                .getDrawable(getActivity(), R.drawable.avd_search_to_back);
 
         // Place an action bar item for searching.
         mSearchmenu = menu.add("Search");
@@ -108,8 +102,7 @@ public class ProductListFragment extends Fragment implements
         mSearchmenu.setActionView(mSearchView);
         mSearchView.setOnSearchClickListener(this);
 
-        Log.e("ProductListFragment","OnCreateOptionsMenu called!!!!");
-
+        //TODO Move this over to the XML.
     }
 
     @Override
@@ -117,6 +110,11 @@ public class ProductListFragment extends Fragment implements
         mPresenter = presenter;
     }
 
+    /**
+     * Called by the presenter to show the clicked product item in the next activity.
+     * @param view the viewholder that was clicked. Need for animation purposes.
+     * @param product product that was clicked
+     */
     @Override
     public void showProductDetailUi(View view, Product product) {
         Intent intent = new Intent(this.getActivity(), ProductDetailActivity.class);
@@ -129,6 +127,12 @@ public class ProductListFragment extends Fragment implements
         getActivity().startActivity(intent,options.toBundle());
     }
 
+    /**
+     * Called when by the presenter when an item has been added or removed from the cart to
+     * apply appropriate UI changes.
+     * @param view ImageButton that was clicked
+     * @param n Supplied by presenter, n=0 product added to, cart n=1 product removed from cart.
+     */
     @Override
     public void onAddRemoveCart(View view,int n) {
         String snackbarMessage=" Item removed from cart !!";
@@ -137,14 +141,22 @@ public class ProductListFragment extends Fragment implements
             snackbarMessage ="Item added to cart !!";
         }
         else((ImageButton)view).setImageResource(R.drawable.cart);
+
         Snackbar.make(view,snackbarMessage, Snackbar.LENGTH_SHORT).show();
 
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outstate){
+        super.onSaveInstanceState(outstate);
+        outstate.putSerializable("cart",mPresenter.getCart());
+    }
 
     @Override
     public void onResume(){
         super.onResume();
+        // every time the activity/fragment/View resumes from the backstack
+        // just start the Presenter.
         mPresenter.start();
     }
 
@@ -153,6 +165,12 @@ public class ProductListFragment extends Fragment implements
        return false;
     }
 
+
+    /**
+     * Helper method for showing the user's spoken query in the
+     * search view.
+     * @param query what the user said
+     */
     public void passQuery(String query){
         mSearchView.setQuery(query,false);
         mPresenter.loadProducts(query);
@@ -160,26 +178,34 @@ public class ProductListFragment extends Fragment implements
 
     @Override
     public void showProducts(List<Product> products) {
-
         mAdapter.replaceData(products);
     }
 
+    /**
+     * Called when the FAB is clicked for the search action button is clicked
+     * @param v view that was clicked
+     */
     @Override
     public void onClick(View v) {
-            MenuItemCompat.expandActionView(mSearchmenu);
+
+            MenuItemCompat.expandActionView(mSearchmenu); // need this for when the FAB is clicked
+
             mSearchView.setPressed(true);
-            mSearchView.setScaleX(0.0f);
+
+            mSearchView.setScaleX(0.0f); // first set the scale to 0.0
             mSearchView.animate().scaleX(1.0f)
                     .setDuration(500)
                     .setInterpolator(AnimationUtils.loadInterpolator(getActivity(),android.R.anim.linear_interpolator))
                     .start();
 
     }
+
     private class ProductListAdapter extends RecyclerView.Adapter<ViewHolder>{
 
 
         private List<Product> mProducts;
 
+        // Required for the ViewHolder animations.
         private int lastPosition = -1;
 
         public ProductListAdapter(Context context, ArrayList<Product> products) {
@@ -202,15 +228,21 @@ public class ProductListFragment extends Fragment implements
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             holder.bind(mProducts.get(position));
-            if(position>lastPosition)
-                holder.itemView.startAnimation(AnimationUtils.loadAnimation(getActivity(),android.R.anim.slide_in_left));
+            if(position>lastPosition){
+                holder.itemView.
+                        startAnimation(AnimationUtils.loadAnimation(getActivity(),android.R.anim.slide_in_left));
             lastPosition=position;
+            }
         }
          @Override
         public int getItemCount() {
            return mProducts.size();
         }
 
+        /**
+         * Called by the presenter when new search results are available.
+         * @param products
+         */
         public void replaceData(List<Product> products){
             mProducts = products;
             notifyDataSetChanged();
@@ -219,6 +251,9 @@ public class ProductListFragment extends Fragment implements
 
     private  class ViewHolder extends RecyclerView.ViewHolder{
 
+        // Each view holder holds a reference to ListItemBinding
+        // so that it can be used later while binding the list item to the
+        // recycler view in onBindViewHolder
         private final ProductListItemBinding productBinding;
 
         public ViewHolder(ProductListItemBinding productBinding) {
@@ -233,10 +268,17 @@ public class ProductListFragment extends Fragment implements
         }
     }
 
+    /** An adapter method for data binding library which will call this to load the
+     *  image.
+     * @param networkImageView Volley image view for showing network downloaded images
+     * @param url link to download from
+     */
+
     @BindingAdapter("imageUrl")
     public static void loadImage(NetworkImageView networkImageView,String url){
         ImageLoader imgLoader = NetworkImageLoaderHelper.getInstance(networkImageView.getContext()).getMbitMapLoader();
         networkImageView.setDefaultImageResId(R.drawable.ic_perm_media_black);
         networkImageView.setImageUrl(url,imgLoader);
     }
+
 }

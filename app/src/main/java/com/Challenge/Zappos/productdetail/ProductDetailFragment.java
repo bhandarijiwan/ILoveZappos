@@ -58,6 +58,7 @@ public class ProductDetailFragment extends Fragment implements ProductDetailCont
         return binding.getRoot();
     }
 
+
     @Override
     public void showProduct(Product product) {
         binding.setProduct(product);
@@ -72,7 +73,7 @@ public class ProductDetailFragment extends Fragment implements ProductDetailCont
     @Override
     public void onResume() {
         super.onResume();
-        mPresenter.start();
+        mPresenter.start(); // start the presenter
     }
 
     @Override
