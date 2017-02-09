@@ -3,7 +3,13 @@ package com.Challenge.Zappos.productdetail;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.ShareActionProvider;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -11,15 +17,13 @@ import com.Challenge.Zappos.R;
 import com.Challenge.Zappos.data.Product;
 import com.Challenge.Zappos.databinding.ProductDetailFragmentBinding;
 import com.Challenge.Zappos.utils.NetworkImageLoaderHelper;
+import com.Challenge.Zappos.utils.ProductInfoHelper;
 import com.android.volley.toolbox.ImageLoader;
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.DefaultSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by jiwanbhandari on 2/2/17.
@@ -28,19 +32,21 @@ import java.util.List;
 public class ProductDetailFragment extends Fragment implements ProductDetailContract.View, BaseSliderView.OnSliderClickListener {
 
     private ProductDetailContract.Presenter mPresenter;
+
     private ProductDetailFragmentBinding binding;
 
     private SliderLayout mSlider;
 
-    private Product mProduct;
+    private ShareActionProvider mShareActionProvider;
 
     public ProductDetailFragment() {
-    }
 
+    }
 
     @Override
     public void onCreate(Bundle savedInstceItems) {
         super.onCreate(savedInstceItems);
+        mShareActionProvider =new ShareActionProvider(getActivity());
     }
 
     @Override
@@ -55,12 +61,24 @@ public class ProductDetailFragment extends Fragment implements ProductDetailCont
                 DataBindingUtil.inflate(inflater, R.layout.product_detail_fragment, container, false);
 
         mSlider = binding.slider;
+        setHasOptionsMenu(true);
+
         return binding.getRoot();
     }
 
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
+
+        MenuItem item = menu.add("Share");
+        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+        MenuItemCompat.setActionProvider(item,mShareActionProvider);
+    }
+
+    @Override
     public void showProduct(Product product) {
+
         binding.setProduct(product);
         TextSliderView textSliderView=new TextSliderView(getActivity());
         textSliderView.setScaleType(BaseSliderView.ScaleType.CenterCrop);
@@ -68,6 +86,7 @@ public class ProductDetailFragment extends Fragment implements ProductDetailCont
                 .image(product.getThumbnailImageUrl()).bundle(new Bundle())
                 .getBundle().putString("extra", product.getProductName());
         mSlider.addSlider(textSliderView);
+        mShareActionProvider.setShareIntent(ProductInfoHelper.getShareableIntent(product));
     }
 
     @Override
