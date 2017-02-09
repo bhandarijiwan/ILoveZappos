@@ -1,6 +1,11 @@
-# ILoveZappos
-Android application for the Android application development Intern challenge. This app serves to showcase the use of the 
+# ILoveZappos  
+
+ [**Download the unsigned APK here**](https://drive.google.com/file/d/0B29xZsS9iYoAM0FIQ09nVHBhYVk/view?usp=sharing)
+
+Android application for the Android application development Intern challenge. This app serves to showcase the use of the
 following android framework and concepts:
+
+
 - **Android Data Binding** Android data binding has been used to bind data to view. Databinding is used to inflate and set the layouts.
  The Recycler View uses data binding to inflate and populate the view holders. The product detail activity uses data binding. 
 - **Floating Action Button** There is a floating action button in the first activity (ProductListActivity). It can be pressed to open a 
